@@ -1,0 +1,50 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .info {
+    margin-bottom: 1rem;
+  }
+  
+  .cliente {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .fecha {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .total {
+    font-size: 1.1rem;
+    color: #0070f3;
+    font-weight: bold;
+  }
+  
+  .productos {
+    margin-top: 1rem;
+  }
+  
+  .productos h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .producto {
+    font-size: 0.9rem;
+    color: #333;
+    margin: 0.3rem 0;
+  }
+  
