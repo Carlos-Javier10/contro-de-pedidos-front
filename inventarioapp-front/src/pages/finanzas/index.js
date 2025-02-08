@@ -11,7 +11,7 @@ const FinanzasPage = () => {
         <h1>Gestión de Finanzas</h1>
         <p>Administra los ingresos, egresos y balances de tu inventario fácilmente.</p>
       </main>
-      <Footer />
+      <Footer /> 
     </>
   );
 };
