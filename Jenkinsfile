@@ -1,8 +1,8 @@
 pipeline {
-    agent any
-
-    environment {
-        NODE_VERSION = '18'
+    agent {
+        docker {
+            image 'node:18'
+        }
     }
 
     stages {
@@ -10,14 +10,6 @@ pipeline {
             steps {
                 echo 'Clonando el repositorio...'
                 checkout scm
-            }
-        }
-
-        stage('Setup Node.js') {
-            steps {
-                echo 'Configurando Node.js...'
-                sh "nvm install ${NODE_VERSION}"
-                sh "nvm use ${NODE_VERSION}"
             }
         }
 
