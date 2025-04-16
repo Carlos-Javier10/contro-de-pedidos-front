@@ -201,3 +201,47 @@
   }
   
   /* Otros estilos existentes */
+  .container {
+    padding: 2rem;
+  }
+  
+  .pedidosContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .cliente {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .productos {
+    margin-top: 1rem;
+  }
+  
+  .productoItem {
+    margin-bottom: 0.5rem;
+  }
+  
+  .estado,
+  .total,
+  .fecha,
+  .detalle {
+    margin-top: 0.5rem;
+  }

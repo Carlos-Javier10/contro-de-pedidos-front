@@ -2,36 +2,24 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { getPedidosj, addPedidoj } from "../../utils/api";
 import styles from "../../styles/PedidoCard.module.css";
-// Importa el componente Solicitado. Asegúrate de que la ruta sea correcta.
-import Solicitado from "./menus/Solicitado";
 
 const PedidosjCard = () => {
-  // Estado para alternar vistas: "default" muestra el formulario y listado, "solicitado" muestra el componente Solicitado.
   const [activeMenu, setActiveMenu] = useState("default");
-
-  // Estados para pedidos y datos del formulario
   const [pedidos, setPedidos] = useState([]);
   const [cliente, setCliente] = useState("");
-  // Los productos se guardarán en un array con objetos: { nombre, cantidad, precioUnitario, totalProducto }
   const [productosPedido, setProductosPedido] = useState([]);
-
-  // Estados para la entrada manual de un producto
   const [nombreProducto, setNombreProducto] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [precioUnitario, setPrecioUnitario] = useState("");
-
-  // Otros estados del pedido
-  const [estado, setEstado] = useState("Solicitado"); // Valor por defecto: "Solicitado"
+  const [estado, setEstado] = useState("Solicitado");
   const [detalle, setDetalle] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Calcular el total del pedido sumando el total de cada producto agregado
   const totalPedido = productosPedido.reduce(
     (sum, prod) => sum + Number(prod.totalProducto),
     0
   );
 
-  // Cargar pedidos al montar el componente
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
@@ -47,26 +35,27 @@ const PedidosjCard = () => {
     fetchPedidos();
   }, []);
 
-  // Función para agregar un producto al pedido (ingresado manualmente)
   const handleAgregarProducto = (e) => {
     e.preventDefault();
-    const cant = parseFloat(cantidad) || 0;
-    const precio = parseFloat(precioUnitario) || 0;
+    if (!nombreProducto.trim() || !cantidad.trim() || !precioUnitario.trim()) {
+      alert("Por favor, complete todos los campos para agregar el producto.");
+      return;
+    }
+    const cant = parseFloat(cantidad);
+    const precio = parseFloat(precioUnitario);
     const totalProducto = cant * precio;
     const nuevoProducto = {
-      nombre: nombreProducto, // Puede quedar vacío si no se ingresa valor
+      nombre: nombreProducto,
       cantidad: cant,
       precioUnitario: precio,
       totalProducto,
     };
     setProductosPedido([...productosPedido, nuevoProducto]);
-    // Limpiar campos del producto
     setNombreProducto("");
     setCantidad("");
     setPrecioUnitario("");
   };
 
-  // Función para enviar el pedido al backend
   const handleAgregarPedido = async (e) => {
     e.preventDefault();
     if (!cliente || productosPedido.length === 0) {
@@ -84,7 +73,6 @@ const PedidosjCard = () => {
     try {
       const response = await addPedidoj(newPedido);
       setPedidos([...pedidos, response]);
-      // Limpiar formulario
       setCliente("");
       setProductosPedido([]);
       setEstado("Solicitado");
@@ -94,20 +82,12 @@ const PedidosjCard = () => {
     }
   };
 
-  // Función para renderizar un pedido (simula lo que hacía el antiguo PedidosjCard)
   const renderPedidoCard = (pedido) => (
     <div key={pedido.id_pedidoj} className={styles.card}>
       <div className={styles.info}>
         <h3 className={styles.cliente}>Cliente: {pedido.cliente}</h3>
         <div className={styles.productos}>
           <h4>Productos:</h4>
-          {/* Menú interno (opcional) */}
-          <div className={styles.links}>
-            <Link href="/pedidosj/solicitado">Solicitado</Link>
-            <Link href="/pedidosj/procesando">Procesando</Link>
-            <Link href="/pedidosj/completado">Completado</Link>
-            <Link href="/pedidosj/cancelado">Cancelado</Link>
-          </div>
           {pedido.productos && pedido.productos.length > 0 ? (
             pedido.productos.map((prod, index) => (
               <div key={index} className={styles.productoItem}>
@@ -152,11 +132,12 @@ const PedidosjCard = () => {
 
   return (
     <>
-      {/* Menú global para alternar vistas */}
       <div className={styles.header}>
         <div className={styles.procesosContainer}>
           <div className={styles.links}>
-            <a onClick={() => setActiveMenu("solicitado")}>Solicitado</a>
+            <Link href="/pedidos/solicitado" legacyBehavior>
+              <a>Solicitado</a>
+            </Link>
             <a onClick={() => setActiveMenu("procesando")}>Procesando</a>
             <a onClick={() => setActiveMenu("completado")}>Completado</a>
             <a onClick={() => setActiveMenu("cancelado")}>Cancelado</a>
@@ -166,87 +147,97 @@ const PedidosjCard = () => {
       </div>
 
       <div className={styles.container}>
-        {activeMenu === "solicitado" ? (
-          // Si se selecciona "Solicitado", renderiza el componente Solicitado
-          <Solicitado />
-        ) : (
-          <>
-            {/* Formulario para agregar un nuevo pedido */}
-            <form onSubmit={handleAgregarPedido} className={styles.form}>
-              <h3>Agregar Pedido</h3>
+        <>
+          <form onSubmit={handleAgregarPedido} className={styles.form}>
+            <h3>Agregar Pedido</h3>
+            <div>
+              <label>Cliente:</label>
+              <input
+                type="text"
+                value={cliente}
+                onChange={(e) => setCliente(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <h4>Agregar Producto al Pedido</h4>
               <div>
-                <label>Cliente:</label>
+                <label>Nombre del Producto:</label>
                 <input
                   type="text"
-                  value={cliente}
-                  onChange={(e) => setCliente(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* Sección para ingresar manualmente productos al pedido */}
-              <div>
-                <h4>Agregar Producto al Pedido</h4>
-                <div>
-                  <label>Nombre del Producto:</label>
-                  <input
-                    type="text"
-                    value={nombreProducto}
-                    onChange={(e) => setNombreProducto(e.target.value)}
-                    placeholder="Nombre del producto"
-                  />
-                </div>
-                <div>
-                  <label>Cantidad:</label>
-                  <input
-                    type="number"
-                    value={cantidad}
-                    onChange={(e) => setCantidad(e.target.value)}
-                    placeholder="Cantidad"
-                  />
-                </div>
-                <div>
-                  <label>Precio Unitario:</label>
-                  <input
-                    type="number"
-                    value={precioUnitario}
-                    onChange={(e) => setPrecioUnitario(e.target.value)}
-                    placeholder="Precio unitario"
-                  />
-                </div>
-                <button onClick={handleAgregarProducto}>Agregar Producto</button>
-              </div>
-
-              <div>
-                <label>Estado:</label>
-                <select
-                  value={estado}
-                  onChange={(e) => setEstado(e.target.value)}
-                  required
-                >
-                  <option value="Solicitado">Solicitado</option>
-                  <option value="Procesando">Procesando</option>
-                  <option value="Completado">Completado</option>
-                  <option value="Cancelado">Cancelado</option>
-                </select>
-              </div>
-              <div>
-                <label>Detalle (opcional):</label>
-                <input
-                  type="text"
-                  value={detalle}
-                  onChange={(e) => setDetalle(e.target.value)}
+                  value={nombreProducto}
+                  onChange={(e) => setNombreProducto(e.target.value)}
+                  placeholder="Nombre del producto"
                 />
               </div>
               <div>
-                <p>
-                  <strong>Total Pedido:</strong> ${Number(totalPedido).toFixed(2)}
-                </p>
+                <label>Cantidad:</label>
+                <input
+                  type="number"
+                  value={cantidad}
+                  onChange={(e) => setCantidad(e.target.value)}
+                  placeholder="Cantidad"
+                />
               </div>
-              <button type="submit">Agregar Pedido</button>
-            </form>
-          </>
-        )}
+              <div>
+                <label>Precio Unitario:</label>
+                <input
+                  type="number"
+                  value={precioUnitario}
+                  onChange={(e) => setPrecioUnitario(e.target.value)}
+                  placeholder="Precio unitario"
+                />
+              </div>
+              <button onClick={handleAgregarProducto}>Agregar Producto</button>
+            </div>
+
+            <div>
+              <h4>Productos en el Pedido:</h4>
+              {productosPedido.length > 0 ? (
+                <ul>
+                  {productosPedido.map((prod, index) => (
+                    <li key={index}>
+                      {prod.nombre || "(Sin nombre)"} - Cantidad: {prod.cantidad} - Precio: $
+                      {Number(prod.precioUnitario).toFixed(2)} - Total: $
+                      {Number(prod.totalProducto).toFixed(2)}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No se han agregado productos</p>
+              )}
+            </div>
+
+            <div>
+              <label>Estado:</label>
+              <select
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+                required
+              >
+                <option value="Solicitado">Solicitado</option>
+                <option value="Procesando">Procesando</option>
+                <option value="Completado">Completado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div>
+              <label>Detalle (opcional):</label>
+              <input
+                type="text"
+                value={detalle}
+                onChange={(e) => setDetalle(e.target.value)}
+              />
+            </div>
+            <div>
+              <p>
+                <strong>Total Pedido:</strong> ${Number(totalPedido).toFixed(2)}
+              </p>
+            </div>
+            <button type="submit">Agregar Pedido</button>
+          </form>
+        </>
       </div>
     </>
   );

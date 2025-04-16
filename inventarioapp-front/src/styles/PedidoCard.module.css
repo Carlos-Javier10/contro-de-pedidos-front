@@ -85,30 +85,70 @@
 
 /* Contenedor de pedidos */
 .pedidosContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   margin-top: 20px;
 }
 
-.pedidoCard {
+/* Tarjeta de pedido */
+.card {
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
-  margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 300px;
 }
 
-.pedidoCard h3 {
-  margin-bottom: 10px;
-  font-size: 20px;
-  color: #444;
+.info {
+  display: flex;
+  flex-direction: column;
 }
 
+.cliente {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.productos {
+  margin-top: 1rem;
+}
+
+.productosTabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.productosTabla th,
+.productosTabla td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.productosTabla th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.estado,
+.total,
+.fecha,
+.detalle {
+  margin-top: 0.5rem;
+}
+
+/* Detalles de la tarjeta */
 .cardDetail p {
   margin: 6px 0;
   font-size: 14px;
   color: #666;
 }
 
+/* Acciones de la tarjeta */
 .cardActions {
   margin-top: 10px;
   text-align: right;
@@ -124,18 +164,18 @@
   font-weight: bold;
 }
 
-.cardActions .deleteButton {
-  background-color: #dc3545;
+.cardActions .updateButton {
+  background-color: #28a745;
   color: white;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.cardActions .deleteButton:hover {
-  background-color: #c82333;
+.cardActions .updateButton:hover {
+  background-color: #218838;
   transform: scale(1.05);
 }
 
-.cardActions .deleteButton:active {
-  background-color: #bd2130;
+.cardActions .updateButton:active {
+  background-color: #1e7e34;
   transform: scale(1);
 }

@@ -1,8 +1,8 @@
-// Importamos los componentes necesarios
 import React from "react";
-import Header from "/src/components/common/Header";
-import Footer from "/src/components/common/Footer";
-import PedidosjCard from "/src/components/pedidosj/PedidosjCard";
+import Header from "../../components/common/Header";
+import Footer from "../../components/common/Footer";
+import PedidosjCard from "../../components/pedidosj/PedidosjCard";
+import SolicitadoPage from "./Solicitado";
 
 const PedidosPage = () => {
   return (
@@ -11,8 +11,8 @@ const PedidosPage = () => {
       <main style={{ padding: "2rem" }}>
         <h1>Pedidos</h1>
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <PedidosjCard></PedidosjCard>
-       
+          <PedidosjCard />
+          <SolicitadoPage />
         </div>
       </main>
       <Footer />

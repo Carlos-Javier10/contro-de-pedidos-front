@@ -291,6 +291,30 @@ export const updatePedidoj = async (id, updatedPedidoj) => {
     throw error;
   }
 }
+
+// Actualizar Estado de Pedidoj por ID
+  export const updatePedidojEstado = async (id, nuevoEstado) => {
+    const url = `http://localhost:5000/api/pedidoj/actualizar-estado-pedidoj/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ estado: nuevoEstado }), // Enviar el nuevo estado
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al actualizar el estado del pedido: ${response.statusText} (${response.status})`);
+      }
+
+      const data = await response.json();
+      console.log("Estado actualizado:", data);
+      return data; // Retorna el pedido actualizado
+    } catch (error) {
+      console.error("Error en updatePedidojEstado:", error.message);
+      throw error;
+    }
+  }
+
 // Eliminar Pedidoj
 export const deletePedidoj = async (id) => {
   const url = `http://localhost:5000/api/pedidoj/eliminar-pedidoj/${id}`;
